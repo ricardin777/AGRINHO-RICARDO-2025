@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feirinha Virtual Interativa</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to bottom, #f0f8ff, #e0f7fa);
+    }
+    header {
+      background-color: #ffffffcc;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+      color: #388e3c;
+    }
+    .quiz-container, .shop {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .question {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    .options button {
+      display: block;
+      margin: 8px 0;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      background-color: #aed581;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .options button:hover {
+      background-color: #81c784;
+    }
+    .product {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 15px 0;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+    .product img {
+      width: 60px;
+      border-radius: 10px;
+    }
+    .product button {
+      margin-left: auto;
+      padding: 6px 12px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .score {
+      font-size: 1.1em;
+      margin-top: 10px;
+      color: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌽 Feirinha Virtual Interativa 🌇</h1>
+    <p>Responda perguntas e ganhe moedas para comprar alimentos fresquinhos!</p>
+  </header>
+
+  <div class="quiz-container">
+    <div class="question" id="question">Carregando pergunta...</div>
+    <div class="options" id="options"></div>
+    <div class="score">Moedas: <span id="score">0</span></div>
+  </div>
+
+  <div class="shop">
+    <h2>🛒 Loja da Feirinha</h2>
+    <div class="product">
+      <img src="https://cdn.pixabay.com/photo/2014/04/02/10/08/apple-305062_1280.png" alt="Maçã">
+      <div>Maçã - 3 moedas</div>
+      <button onclick="buyItem(3, this)">Comprar</button>
+    </div>
+    <div class="product">
+      <img src="https://cdn.pixabay.com/photo/2014/04/02/10/18/banana-305470_1280.png" alt="Banana">
+      <div>Banana - 2 moedas</div>
+      <button onclick="buyItem(2, this)">Comprar</button>
+    </div>
+    <div class="product">
+      <img src="https://cdn.pixabay.com/photo/2013/07/12/16/28/carrot-151067_1280.png" alt="Cenoura">
+      <div>Cenoura - 4 moedas</div>
+      <button onclick="buyItem(4, this)">Comprar</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "Qual é a principal função da agricultura familiar?",
+        options: [
+          "Produzir alimentos de forma sustentável",
+          "Importar alimentos do exterior",
+          "Construir fábricas",
+          "Investir em mineração"
+        ],
+        answer: 0
+      },
+      {
+        question: "O que é um produto orgânico?",
+        options: [
+          "Um alimento com conservantes",
+          "Um alimento natural, sem agrotóxicos",
+          "Alimento industrializado",
+          "Alimento congelado"
+        ],
+        answer: 1
+      },
+      {
+        question: "Como o campo contribui para a cidade?",
+        options: [
+          "Fornecendo alimentos e matérias-primas",
+          "Poluindo os rios",
+          "Aumentando o trânsito",
+          "Construindo shoppings"
+        ],
+        answer: 0
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById('question').innerText = q.question;
+      const optionsDiv = document.getElementById('options');
+      optionsDiv.innerHTML = '';
+      q.options.forEach((option, index) => {
+        const btn = document.createElement('button');
+        btn.innerText = option;
+        btn.onclick = () => checkAnswer(index);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(index) {
+      if (index === questions[currentQuestion].answer) {
+        score += 2;
+        alert("✔️ Resposta correta! Você ganhou 2 moedas.");
+      } else {
+        alert("❌ Resposta errada! Tente novamente.");
+      }
+      document.getElementById('score').innerText = score;
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+      } else {
+        document.getElementById('question').innerText = "Parabéns! Você respondeu todas as perguntas.";
+        document.getElementById('options').innerHTML = '';
+      }
+    }
+
+    function buyItem(price, btn) {
+      if (score >= price) {
+        score -= price;
+        document.getElementById('score').innerText = score;
+        alert("🛍️ Produto comprado com sucesso!");
+        btn.disabled = true;
+        btn.innerText = "Comprado!";
+      } else {
+        alert("💰 Você precisa de mais moedas!");
+      }
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
